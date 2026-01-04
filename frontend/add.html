@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Додати новину</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">Панель адміністратора: Додати новину</div>
+
+<div class="menu">
+    <a href="index.html">Повернутися на головну</a>
+</div>
+
+<div class="wrapper">
+    <div class="form-container">
+        <form id="addNewsForm">
+            <div class="form-group">
+                <label>Заголовок:</label>
+                <input type="text" id="title" required placeholder="Введіть заголовок">
+            </div>
+
+            <div class="form-group">
+                <label>Категорія:</label>
+                <select id="category">
+                    <option value="Політика">Політика</option>
+                    <option value="Суспільство">Суспільство</option>
+                    <option value="Технології">Технології</option>
+                    <option value="Спорт">Спорт</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Зображення:</label>
+                <input type="file" id="image" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label>Короткий опис:</label>
+                <textarea id="short_text" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Повний текст:</label>
+                <textarea id="full_text" rows="6" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Опублікувати новину</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // 1. Перевірка авторизації
+    if (!localStorage.getItem('admin_token')) {
+        alert('Доступ заборонено! Увійдіть в систему.');
+        window.location.href = 'login.html';
+    }
+
+    document.getElementById('addNewsForm').onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const token = localStorage.getItem('admin_token');
+        
+        // 2. Створюємо FormData (важливо для завантаження файлів)
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('category', document.getElementById('category').value);
+        formData.append('short_text', document.getElementById('short_text').value);
+        formData.append('full_text', document.getElementById('full_text').value);
+        
+        const imageFile = document.getElementById('image').files[0];
+        if (imageFile) {
+            formData.append('image', imageFile);
+        }
+
+        try {
+            // 3. Відправляємо ОДИН запит
+            const response = await fetch('http://127.0.0.1:8000/api/news', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                alert('Новину успішно додано!');
+                window.location.href = 'index.html';
+            } else {
+                const error = await response.json();
+                console.error('Деталі помилки:', error);
+                alert('Помилка: ' + (error.message || 'Не вдалося зберегти'));
+            }
+        } catch (error) {
+            console.error('Помилка підключення:', error);
+            alert('Сервер не відповідає. Перевірте php artisan serve');
+        }
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Перегляд новини</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header" id="news-title">Завантаження...</div>
+
+<div class="menu">
+    <a href="index.html">← На головну</a>
+</div>
+
+<div class="wrapper">
+    <div id="news-detail" class="news-card" style="padding: 20px;">
+        </div>
+</div>
+
+<script>
+    async function loadNews() {
+        // Отримуємо ID з URL
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        if (!id) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/news/${id}`);
+            const item = await response.json();
+
+            if (response.status === 404) {
+                document.getElementById('news-detail').innerHTML = "<h2>Новину не знайдено</h2>";
+                return;
+            }
+
+            document.title = item.title;
+            document.getElementById('news-title').innerText = item.title;
+
+            document.getElementById('news-detail').innerHTML = `
+                ${item.image ? `<img src="http://127.0.0.1:8000/storage/${item.image}" class="full-news-image">` : ''}
+                <p class="category">${item.category} | ${new Date(item.created_at).toLocaleDateString()}</p>
+                <div class="full-text" style="margin-top:20px;">${item.full_text}</div>
+            `;
+        } catch (error) {
+            document.getElementById('news-detail').innerHTML = "<p style='color:red'>Помилка завантаження</p>";
+        }
+    }
+
+    loadNews();
+</script>
+</body>
+</html>
