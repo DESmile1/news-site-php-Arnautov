@@ -1,7 +1,7 @@
 # Інформаційний веб-сайт новин (Laravel + JS API)
 ## Курсова робота студента групи ЗАІ-221 Арнаутова Д.В.
 
-🛠 ## Залежності (Dependencies)
+ ## Залежності (Dependencies)
 
 Для роботи проекту необхідно встановити:
 
@@ -13,7 +13,7 @@ MySQL: сервер бази даних (рекомендується XAMPP)
 
 Web Server: вбудований сервер Artisan або Apache
 
-⚙️ ## Встановлення та запуск (Startup)
+ ## Встановлення та запуск (Startup)
 
 ###Клонуйте репозиторій та перейдіть у папку backend.
 
@@ -31,7 +31,7 @@ php artisan key:generate
 ```bash
 php artisan migrate
 ```
-###Створіть посилання для зображень:
+### Створіть посилання для зображень:
 
 ```bash
 php artisan storage:link
@@ -41,7 +41,7 @@ php artisan storage:link
 php artisan serve
 ```
 
-👤 ## Тестові логіни та Seed
+ ## Тестові логіни та Seed
 Оскільки система передбачає вхід лише для адміністратора, виконайте наступну команду для створення тестового акаунта (Seeding через Tinker):
 ```bash
 php artisan tinker
@@ -53,7 +53,7 @@ $user = \App\Models\User::create(['login'=>'admin', 'password'=>bcrypt('12345')]
 
 ### Пароль: 12345
 
-🖼 ## Скріншоти (Screenshots)
+ ## Скріншоти (Screenshots)
 
 ![Головна сторінка](docs/screenshots/home.png)
 
